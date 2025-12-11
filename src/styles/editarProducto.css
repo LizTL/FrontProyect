@@ -1,0 +1,54 @@
+.editar-card {
+  padding: 50px;
+  max-width: 850px;  /* más grande */
+  width: 90%;        /* ocupa casi toda la pantalla en desktop */
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+  background: #f5f7fa;  /* fondo más suave */
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.editar-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 45px rgba(0,0,0,0.25);
+}
+
+.editar-title {
+  text-align: center;
+  font-weight: 800;
+  font-size: 2rem;
+  color: #1565c0;
+  margin-bottom: 30px;
+}
+
+.editar-input .MuiOutlinedInput-root {
+  border-radius: 12px;
+  background-color: #ffffff;
+}
+
+.editar-input .MuiOutlinedInput-root:hover fieldset {
+  border-color: #42a5f5;
+}
+
+.editar-input label.Mui-focused {
+  color: #1565c0;
+}
+
+.guardar-btn {
+  background: linear-gradient(90deg, #42a5f5, #1565c0);
+  color: #fff;
+  padding: 15px 30px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.guardar-btn:hover {
+  background: linear-gradient(90deg, #1565c0, #42a5f5);
+  transform: scale(1.07);
+}
+
+body {
+  background: #e3f2fd;
+}

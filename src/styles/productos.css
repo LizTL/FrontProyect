@@ -1,0 +1,47 @@
+.MiTabla th,
+.MiTabla td {
+  border: 1px solid #1976d2;
+  font-size: 17px;
+}
+
+.MiTabla th {
+  background-color: #1976d2;
+  color: white;
+  font-size: 17px;
+}
+
+.MiTabla tr:hover {
+  background-color: #bbdefb;
+}
+
+.MiTabla {
+  width: 100%;
+  table-layout: auto;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .MiTabla th,
+  .MiTabla td {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  .MiTabla {
+    font-size: 12px;
+    min-width: 600px; 
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .MiTabla td:nth-of-type(3),
+  .MiTabla th:nth-of-type(3) {
+    display: none;
+  }
+}

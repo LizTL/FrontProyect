@@ -1,0 +1,55 @@
+
+.form-container {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  margin: 2rem auto;
+}
+
+.form-container h4 {
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+
+.form-container .MuiTextField-root {
+  background-color: #fff;
+  border-radius: 8px;
+}
+
+
+.form-container .MuiButton-contained {
+  border-radius: 8px;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.form-container .MuiButton-outlined {
+  border-radius: 8px;
+  text-transform: none;
+  font-weight: 500;
+}
+
+.form-container .button-group {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+
+@media (max-width: 600px) {
+  .form-container {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .form-container .button-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
