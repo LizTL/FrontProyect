@@ -7,13 +7,16 @@ export default function StockPage() {
   const [productos, setProductos] = useState([]);
   const [filtro, setFiltro] = useState("");
 
+
   useEffect(() => {
-    axios.get("http://localhost:8080/api/stock") // tu API
-      .then(res => setProductos(res.data))
-      .catch(err => console.error(err));
+    axios
+      .get("http://localhost:8080/api/stock")
+      .then((res) => setProductos(res.data))
+      .catch((err) => console.error("Error al cargar stock:", err));
   }, []);
 
-  const productosFiltrados = productos.filter(p =>
+
+  const productosFiltrados = productos.filter((p) =>
     (p.nombre ?? "").toLowerCase().includes(filtro.toLowerCase()) ||
     (p.cod_bar ?? "").includes(filtro)
   );
@@ -23,14 +26,16 @@ export default function StockPage() {
       <div className="container py-4">
         <h2>Stock de Productos</h2>
 
+        {/* BUSCADOR */}
         <InputGroup className="mb-3" style={{ maxWidth: 400 }}>
           <Form.Control
             placeholder="Buscar producto o código..."
             value={filtro}
-            onChange={e => setFiltro(e.target.value)}
+            onChange={(e) => setFiltro(e.target.value)}
           />
         </InputGroup>
 
+        {/* TABLA */}
         <Table striped bordered hover responsive>
           <thead className="table-dark">
             <tr>
@@ -39,9 +44,10 @@ export default function StockPage() {
               <th>Stock Actual</th>
             </tr>
           </thead>
+
           <tbody>
             {productosFiltrados.length > 0 ? (
-              productosFiltrados.map(p => (
+              productosFiltrados.map((p) => (
                 <tr key={p.id_producto}>
                   <td>{p.nombre}</td>
                   <td>{p.cod_bar}</td>
@@ -54,7 +60,9 @@ export default function StockPage() {
               ))
             ) : (
               <tr>
-                <td colSpan={3} className="text-center">No hay productos.</td>
+                <td colSpan={3} className="text-center">
+                  No hay productos para mostrar.
+                </td>
               </tr>
             )}
           </tbody>

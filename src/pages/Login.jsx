@@ -20,11 +20,9 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      // Obtener todos los usuarios desde la API
       const res = await axios.get("http://localhost:8080/api/usuarios");
       const usuarios = res.data;
 
-      // Buscar usuario que coincida con nombre, correo y contraseña
       const userFound = usuarios.find(
         (u) =>
           u.nombre_usuario.toLowerCase() === nombreUsuario.toLowerCase() &&
@@ -37,10 +35,8 @@ export default function Login() {
         return;
       }
 
-      // Guardar usuario en localStorage
       localStorage.setItem("usuario", JSON.stringify(userFound));
 
-      // Redirigir según rol
       if (userFound.rol.toUpperCase() === "ADMIN") navigate("/productos");
       else navigate("/productos");
 

@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
+import Swal from "sweetalert2";
+
 import axios from "axios";
 import {
   Table,
@@ -10,6 +12,7 @@ import {
   InputGroup,
   Modal
 } from "react-bootstrap";
+
 
 export default function ProductosPage() {
   const [productos, setProductos] = useState([]);
@@ -48,6 +51,7 @@ export default function ProductosPage() {
         );
         return {
           ...prod,
+          estado: prod.estado ?? "ACTIVO",
           stock_actual: stockInfo?.stock_actual || 0,
         };
       });
@@ -61,6 +65,20 @@ export default function ProductosPage() {
   useEffect(() => {
     cargarDatos();
   }, []);
+useEffect(() => {
+  const productosBajoStock = productos.filter(p => p.stock_actual < 5);
+
+  if (productosBajoStock.length > 0) {
+    const nombres = productosBajoStock.map(p => p.nombre).join(", ");
+
+    Swal.fire({
+      title: "⚠️ Stock bajo",
+      text: `Los siguientes productos tienen menos de 5 unidades: ${nombres}`,
+      icon: "warning",
+      confirmButtonText: "Entendido",
+    });
+  }
+}, [productos]);
 
 
   const handleChange = (e) => {
@@ -80,7 +98,7 @@ export default function ProductosPage() {
   const handleEditar = (prod) => {
     setNuevoProducto({
       id_producto: prod.id_producto,
-      cod_bar: prod.codBar, // código de barras real
+      cod_bar: prod.codBar,
       nombre: prod.nombre,
       descripcion: prod.descripcion || "",
       precio_unitario: prod.precio_unitario || 0,
@@ -91,7 +109,7 @@ export default function ProductosPage() {
     setShowModal(true);
   };
 
-  
+
   const handleAgregar = () => {
     setNuevoProducto({
       id_producto: null,
@@ -106,7 +124,7 @@ export default function ProductosPage() {
     setShowModal(true);
   };
 
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -134,9 +152,28 @@ export default function ProductosPage() {
       console.error(err);
       alert("No se pudo guardar el producto");
     }
+
   };
 
- 
+
+  // -------------- BOTÓN ELIMINAR FUNCIONAL ------------------
+  const handleEliminar = async (id) => {
+    if (!window.confirm("¿Seguro que quieres marcar este producto como eliminado?")) return;
+
+    try {
+      await axios.put(`http://localhost:8080/api/productos/${id}/estado`, {
+        estado: "INACTIVO"
+      });
+
+      cargarDatos();
+    } catch (err) {
+      console.error(err);
+      alert("Error al eliminar el producto");
+    }
+  };
+  // -----------------------------------------------------------
+
+
   const productosFiltrados = productos.filter(p =>
     (p.nombre ?? "").toLowerCase().includes(filtro.toLowerCase()) ||
     (p.categoria?.nombre ?? "").toLowerCase().includes(filtro.toLowerCase())
@@ -169,7 +206,7 @@ export default function ProductosPage() {
             }}
           />
         </InputGroup>
-{/* TABLA */}
+
 <div className="table-responsive">
   <Table striped bordered hover>
     <thead className="table-dark">
@@ -192,22 +229,43 @@ export default function ProductosPage() {
         paginatedProductos.map(prod => (
           <tr key={prod.id_producto}>
             <td>{prod.id_producto}</td>
-            <td>{prod.nombre}</td>
+
+            {/* nombre con estilo si está eliminado */}
+            <td
+              style={{
+                fontWeight: prod.estado === "INACTIVO" ? "bold" : "normal",
+                color: prod.estado === "INACTIVO" ? "red" : "inherit",
+                textDecoration: prod.estado === "INACTIVO" ? "line-through" : "none"
+              }}
+            >
+              {prod.nombre}
+            </td>
+
             <td>{prod.codBar}</td>
             <td>{prod.descripcion}</td>
             <td>{prod.categoria?.nombre}</td>
             <td>{prod.unidad_medida}</td>
             <td>{prod.precio_unitario.toFixed(2)}</td>
             <td>{prod.stock_actual}</td>
+
             <td>
               <Badge bg={prod.stock_actual < 5 ? "danger" : "success"}>
                 {prod.stock_actual < 5 ? "Bajo" : "Suficiente"}
               </Badge>
             </td>
+
             <td>
               <div className="d-flex gap-2 flex-wrap">
                 <Button variant="primary" size="sm" onClick={() => handleEditar(prod)}>Editar</Button>
-                <Button variant="warning" size="sm">Eliminar</Button>
+
+                {/* BOTÓN ELIMINAR LISTO */}
+                <Button
+                  variant="warning"
+                  size="sm"
+                  onClick={() => handleEliminar(prod.id_producto)}
+                >
+                  Eliminar
+                </Button>
               </div>
             </td>
           </tr>
@@ -221,10 +279,7 @@ export default function ProductosPage() {
   </Table>
 </div>
 
-    
 
-
-        {/* PAGINACION */}
         <div className="d-flex justify-content-between align-items-center">
           <Form.Select
             style={{ width: 100 }}
@@ -260,7 +315,6 @@ export default function ProductosPage() {
           </Pagination>
         </div>
 
-        {/* MODAL */}
         <Modal show={showModal} onHide={() => setShowModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>

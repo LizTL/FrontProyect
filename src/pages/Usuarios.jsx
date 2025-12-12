@@ -16,7 +16,6 @@ export default function UsuariosPage() {
     rol: "USUARIO",
   });
 
-  // 🔹 Cargar usuarios desde la API y agregar estado temporal "activo"
   const obtenerUsuarios = async () => {
     try {
       const res = await axios.get("http://localhost:8080/api/usuarios");
@@ -31,22 +30,21 @@ export default function UsuariosPage() {
     obtenerUsuarios();
   }, []);
 
-  // 🔹 Nuevo usuario
   const abrirNuevo = () => {
     setModo("crear");
     setUsuario({ id_usuario: null, nombre_usuario: "", correo: "", password: "", rol: "USUARIO" });
     setShowModal(true);
   };
 
-  // 🔹 Editar usuario
+  
   const abrirEditar = (u) => {
-    if (u.estadoFront === "inactivo") return; // no se puede editar inactivos
+    if (u.estadoFront === "inactivo") return; 
     setModo("editar");
     setUsuario({ ...u, password: "" });
     setShowModal(true);
   };
 
-  // 🔹 Guardar usuario (POST o PUT real)
+
   const guardarUsuario = async () => {
     try {
       if (modo === "crear") {
@@ -67,7 +65,6 @@ export default function UsuariosPage() {
     }
   };
 
-  // 🔹 Inactivar / Activar solo en frontend
   const cambiarEstadoFront = (id) => {
     setUsuarios(
       usuarios.map(u =>
@@ -131,7 +128,7 @@ export default function UsuariosPage() {
           </Table>
         </Card>
 
-        {/* MODAL */}
+   
         <Modal show={showModal} onHide={() => setShowModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>{modo === "crear" ? "Nuevo Usuario" : "Editar Usuario"}</Modal.Title>
